@@ -1,0 +1,107 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis"
+version = "1.0.0"
+description = "Provable containment for agentic AI: semantic firewall + capability-bounded execution."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "LicenseRef-Proprietary"
+authors = [{ name = "Project Aegis" }]
+# Core is stdlib-only. Optional integrations are declared as extras.
+dependencies = []
+
+[project.optional-dependencies]
+crypto = ["cryptography>=42"]
+vertex = ["google-cloud-aiplatform>=1.53"]
+test = ["hypothesis>=6.98", "pytest>=8", "pytest-cov>=5"]
+lint = ["ruff>=0.4", "mypy>=1.10", "bandit>=1.7"]
+dev = ["cryptography>=42", "hypothesis>=6.98", "pytest>=8", "pytest-cov>=5",
+       "ruff>=0.4", "mypy>=1.10", "bandit>=1.7", "import-linter>=2.0",
+       "cyclonedx-py>=0.5", "pip-audit>=2.7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["S101"]  # assert is fine in tests
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "src"
+files = ["src/aegis"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+check_untyped_defs = true
+no_implicit_optional = true
+
+[tool.coverage.run]
+source = ["aegis"]
+branch = true
+
+[tool.coverage.report]
+# Core + capability_bounded are the security-critical layers.
+fail_under = 85
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+[tool.importlinter]
+root_package = "aegis"
+include_external_packages = false
+
+[[tool.importlinter.contracts]]
+name = "core has no dependencies"
+type = "forbidden"
+source_modules = ["aegis.core"]
+forbidden_modules = [
+    "aegis.semantic_gateway",
+    "aegis.capability_bounded",
+    "aegis.verticals",
+    "aegis.plugins",
+    "aegis.edge",
+    "aegis.dashboard",
+    "aegis.agentic_soc",
+    "aegis.self_improvement",
+    "aegis.evaluation",
+    "aegis.qkd",
+    "aegis.mtac",
+]
+
+[[tool.importlinter.contracts]]
+name = "enforcement layer depends only on core + gateway"
+type = "layers"
+layers = [
+    "aegis.core",
+    "aegis.semantic_gateway",
+    "aegis.capability_bounded",
+    "aegis.verticals",
+    "aegis.plugins",
+    "aegis.edge",
+    "aegis.dashboard",
+    "aegis.agentic_soc",
+    "aegis.self_improvement",
+    "aegis.evaluation",
+]
+
+[[tool.importlinter.contracts]]
+name = "verticals may not import plugins (composition root only)"
+type = "forbidden"
+source_modules = ["aegis.verticals"]
+forbidden_modules = ["aegis.plugins", "aegis.edge", "aegis.dashboard"]

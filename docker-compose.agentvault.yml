@@ -1,0 +1,16 @@
+# Agent Vault prototype — local dev stack with placeholder credentials.
+# Real keys are swapped in .env without touching this file.
+services:
+  agent-vault:
+    build:
+      context: .
+      dockerfile: agent_vault/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5

@@ -1,0 +1,21 @@
+{
+  "environment": "local",
+  "gcp_project_id": "REPLACE_ME_PROJECT_ID",
+  "gcp_region": "us-central1",
+  "cloud_run_service": "aegis",
+  "kms_provider": "fake",
+  "kms_key_ring": "aegis-keyring",
+  "kms_key": "aegis-attestation-key",
+  "kms_key_version": "1",
+  "gemini_model": "gemini-2.5-flash",
+  "gemini_project": "REPLACE_ME_PROJECT_ID",
+  "gemini_location": "us-central1",
+  "feed_fsisac_url": "https://feeds.fsisac.com/aegis/signatures.json",
+  "feed_hisac_url": "https://feeds.h-isac.org/aegis/signatures.json",
+  "feed_cisa_url": "https://feeds.cisa.gov/aegis/signatures.json",
+  "feed_fsisac_api_key": "REPLACE_ME_FSISAC_API_KEY",
+  "feed_hisac_api_key": "REPLACE_ME_HISAC_API_KEY",
+  "feed_cisa_api_key": "REPLACE_ME_CISA_API_KEY",
+  "stripe_api_key": "REPLACE_ME_STRIPE_API_KEY",
+  "database_url": "REPLACE_ME_DATABASE_URL"
+}

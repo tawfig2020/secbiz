@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Test / tooling artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+heldout.jsonl
+sbom.cdx.json
+
+# Runtime data
+data/
+*.db
+*.sqlite3
+
+# Local config / secrets
+config.json
+.env
+
+# Firebase hosting cache
+.firebase/

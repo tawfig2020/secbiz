@@ -1,0 +1,28 @@
+{
+  "tests": {
+    "ran": 170,
+    "passed": true,
+    "seconds": 3.81
+  },
+  "baseline": {
+    "attacks": 426,
+    "bypass_rate": 0.9178,
+    "benign_blocked_rate": 0.0
+  },
+  "aegis": {
+    "bypass_rate": 0.030516431924882625,
+    "fp_rate": 0.0,
+    "detection_rate": 0.9694835680751174,
+    "p50_ms": 0.5412999889813364,
+    "p95_ms": 1.7580999992787838,
+    "p99_ms": 2.230200101621449
+  },
+  "hard": {
+    "bypass_before": 0.030888030888030937,
+    "bypass_after": 0.030888030888030937,
+    "heldout_bypass_before": 0.045454545454545414,
+    "heldout_bypass_after": 0.045454545454545414,
+    "generalization_gap": 0.0146,
+    "accepted": false
+  }
+}

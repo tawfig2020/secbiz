@@ -1,0 +1,16 @@
+# Local dev stack. Production uses the IaC in docs/operations.md.
+services:
+  aegis:
+    build: .
+    ports:
+      - "8090:8090"
+    environment:
+      AEGIS_ENVIRONMENT: local
+      AEGIS_API_KEYS: "dev-key-1,dev-key-2"
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/healthz')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5

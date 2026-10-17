@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AEGIS-BFSI — Master Commercial & Expansion Blueprint</title>
+<style>
+  :root {
+    --primary: #1D4ED8;
+    --primary-dark: #1E3A8A;
+    --primary-light: #EFF6FF;
+    --accent-gold: #F59E0B;
+    --accent-green: #059669;
+    --accent-red: #DC2626;
+    --ink: #0F172A;
+    --ink-light: #334155;
+    --muted: #64748B;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --card-bg: #FFFFFF;
+    --surface: #F8FAFC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page {
+    size: A4 portrait;
+    margin: 14mm 14mm 16mm 14mm;
+    @bottom-right {
+      content: counter(page);
+    }
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    color: var(--ink);
+    background: #FFFFFF;
+    line-height: 1.5;
+    font-size: 12.5px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 100%;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10mm;
+  }
+
+  .page:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Running Header & Footer */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+  }
+
+  .doc-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Cover Page */
+  .cover {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #0F172A 100%);
+    color: #FFFFFF;
+    padding: 30mm 20mm 20mm 20mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cover-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(29, 78, 216, 0.4);
+    border: 1px solid rgba(147, 197, 253, 0.5);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #93C5FD;
+    width: fit-content;
+    margin-bottom: 24px;
+  }
+  .cover-title {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: #FFFFFF;
+  }
+  .cover-title span {
+    color: #38BDF8;
+  }
+  .cover-sub {
+    font-size: 18px;
+    color: #E2E8F0;
+    max-width: 650px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    font-weight: 400;
+  }
+
+  .cover-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .cover-meta-item label {
+    display: block;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94A3B8;
+    margin-bottom: 3px;
+  }
+  .cover-meta-item div {
+    font-size: 14px;
+    font-weight: 700;
+    color: #F8FAFC;
+  }
+
+  /* Headings */
+  h1 { font-size: 21px; font-weight: 800; color: var(--ink); margin-bottom: 9px; letter-spacing: -0.01em; }
+  h2 { font-size: 15px; font-weight: 800; color: var(--primary-dark); margin-top: 10px; margin-bottom: 6px; border-left: 4px solid var(--primary); padding-left: 9px; }
+  h3 { font-size: 13px; font-weight: 700; color: var(--ink); margin-top: 8px; margin-bottom: 3px; }
+  p { margin-bottom: 8px; color: var(--ink-light); }
+
+  /* Cards & Callouts */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 11px 13px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .card.highlight {
+    background: var(--primary-light);
+    border-color: #BFDBFE;
+    border-left: 4px solid var(--primary);
+  }
+  .card.success {
+    background: #ECFDF5;
+    border-color: #A7F3D0;
+    border-left: 4px solid var(--accent-green);
+  }
+  .card.warning {
+    background: #FEF3C7;
+    border-color: #FDE68A;
+    border-left: 4px solid var(--accent-gold);
+  }
+
+  /* Grids */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 10px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 11px 0;
+    font-size: 11px;
+  }
+  th {
+    background: #EFF6FF;
+    color: var(--primary-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    padding: 6px 8px;
+    border-bottom: 2px solid var(--primary);
+    text-align: left;
+  }
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-light);
+  }
+  tr:nth-child(even) td { background: #F8FAFC; }
+  td strong { color: var(--ink); }
+
+  /* Badges & Pills */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge.blue { background: #DBEAFE; color: #1E40AF; }
+  .badge.green { background: #D1FAE5; color: #065F46; }
+  .badge.gold { background: #FEF3C7; color: #92400E; }
+  .badge.red { background: #FEE2E2; color: #991B1B; }
+
+  /* SVG Diagram Box */
+  .diagram-box {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 9px;
+    text-align: center;
+    margin: 8px 0 11px 0;
+  }
+
+  .stat-block {
+    text-align: center;
+    padding: 10px 6px;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .stat-val { font-size: 22px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .stat-val.primary { color: var(--primary); }
+  .stat-val.green { color: var(--accent-green); }
+  .stat-val.gold { color: #B45309; }
+  .stat-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<!-- ========================================================================= -->
+<!-- COVER PAGE -->
+<!-- ========================================================================= -->
+<section class="page cover">
+  <div>
+    <div class="cover-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Commercial &amp; Strategic Roadmap &bull; 2026–2031
+    </div>
+    <div class="cover-title">
+      AEGIS-BFSI<br>
+      <span>Master Commercial &amp; Expansion Blueprint</span>
+    </div>
+    <div class="cover-sub">
+      A comprehensive 5-year strategic blueprint for commercializing deterministic, cryptographically proven execution safety for autonomous banking agents. From regional ASEAN sandbox to global hyperscaler marketplace dominance.
+    </div>
+
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <label>Executive Organization</label>
+        <div>ETHRAA MANAGEMENT</div>
+      </div>
+      <div class="cover-meta-item">
+        <label>Headquarters &amp; Hub</label>
+        <div>Kuala Lumpur, Malaysia</div>
+      </div>
+      <div class="cover-meta-item">
+        <label>Team Leadership</label>
+        <div>TAUFEEQ IBRAHIM (Lead) &bull; Adham &bull; Bashar</div>
+      </div>
+      <div class="cover-meta-item">
+        <label>Primary Target Sector</label>
+        <div>Tier-1 Banks, Clearing Rails, Sovereign FinTechs</div>
+      </div>
+      <div class="cover-meta-item">
+        <label>Live Verified Prototype</label>
+        <div>https://secbiz.web.app</div>
+      </div>
+      <div class="cover-meta-item">
+        <label>Distribution Rails</label>
+        <div>Google Cloud Marketplace &bull; AWS &bull; Azure</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 14px; display: flex; justify-content: space-between; font-size: 12px; color: #CBD5E1;">
+    <div>Confidential Document &bull; ETHRAA MANAGEMENT Strategic Planning</div>
+    <div>Version 2.0 &bull; October 2026</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- EXECUTIVE SUMMARY & PROBLEM STATEMENT -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; ETHRAA MANAGEMENT</span>
+    <span>Executive Briefing</span>
+  </div>
+
+  <h1>Executive Summary &amp; Problem Space</h1>
+
+  <div class="card highlight">
+    <h3 style="color:var(--primary-dark); font-size:15px;">The $120B Autonomous Banking Transition</h3>
+    <p>
+      Global financial institutions are racing to deploy autonomous AI agents to automate high-volume operations: invoice settlement, SWIFT messaging, trade reconciliation, customer underwriting, and wealth advisory. By 2028, over 65% of Tier-1 banks will rely on autonomous multi-agent pipelines to execute transactions.
+    </p>
+  </div>
+
+  <h2>The Critical Industry Vulnerability</h2>
+  <p>
+    Large Language Models are probabilistic text engines. According to rigorous empirical benchmarks by NIST and OWASP, frontier LLMs remain vulnerable to <strong>Prompt Injection (OWASP LLM #1)</strong> and confused-deputy attacks ~81% of the time. When an autonomous banking agent reads an untrusted PDF invoice containing an invisible injection payload, it becomes hijacked. 
+  </p>
+  
+  <div class="grid-2">
+    <div class="card warning">
+      <h3 style="color:#B45309;">Why Incumbent Guardrails Fail</h3>
+      <p style="font-size:12.5px;">
+        Traditional solutions (e.g., system prompts, Python wrappers, output classifiers) operate <em>inside</em> the model boundary. They effectively ask a compromised model to police itself. If the core reasoning layer is deceived, internal guardrails collapse.
+      </p>
+    </div>
+    <div class="card success">
+      <h3 style="color:var(--accent-green);">The AEGIS-BFSI Paradigm Shift</h3>
+      <p style="font-size:12.5px;">
+        AEGIS-BFSI enforces safety <strong>strictly outside the model</strong>. By splitting agents into untrusted Readers and tool-restricted Executors governed by formal, signed Capability Contracts, a hijacked model cannot move money. Containment is deterministic and mathematically proven.
+      </p>
+    </div>
+  </div>
+
+  <h2>Market Urgency &amp; Regulatory Pressure</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Regulatory Framework</th>
+        <th>Jurisdiction</th>
+        <th>Mandatory Requirement</th>
+        <th>Non-Compliance Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>DORA (Digital Operational Resilience)</strong></td>
+        <td>European Union</td>
+        <td>Art. 9–10: ICT risk detection &amp; operational resilience against AI threats</td>
+        <td>Fines up to 2% of global annual turnover; suspension of ICT licenses</td>
+      </tr>
+      <tr>
+        <td><strong>EU AI Act (Article 15)</strong></td>
+        <td>EU &amp; Cross-Border</td>
+        <td>High-risk banking systems must demonstrate resilience to adversarial inputs</td>
+        <td>Administrative fines up to &euro;35,000,000 or 7% of annual turnover</td>
+      </tr>
+      <tr>
+        <td><strong>BNM Risk Management in Tech (RMiT)</strong></td>
+        <td>Malaysia</td>
+        <td>Mandatory dual-control, access boundaries, and cyber incident tracking</td>
+        <td>Direct regulatory intervention and capital adequacy surcharges</td>
+      </tr>
+      <tr>
+        <td><strong>MAS FEAT Principles</strong></td>
+        <td>Singapore</td>
+        <td>Fairness, Ethics, Accountability, and Transparency in autonomous models</td>
+        <td>Loss of privileged digital banking charter and enforcement orders</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 2</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- CHAPTER 1: PRICING MODEL & UNIT ECONOMICS -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; Commercial Strategy</span>
+    <span>Chapter 1: Pricing &amp; Economics</span>
+  </div>
+
+  <h1>Chapter 1: Strategic Pricing Architecture</h1>
+  <p>
+    Financial institutions reject unpredictable, un-capped pay-per-token pricing for mission-critical infrastructure. AEGIS-BFSI utilizes an <strong>Annual Capacity Subscription (ACV)</strong> model sold via private offers on Hyperscaler Cloud Marketplaces.
+  </p>
+  <div class="card warning" style="margin-bottom:10px;">
+    <p style="font-size:11px; margin:0;"><strong>Illustrative Planning Assumptions:</strong> All prices, volumes, margins, and retention figures in this document are directional planning targets for discussion with advisors and early design partners &mdash; not validated market research, committed pricing, or financial forecasts. They must be validated through pilot engagements, procurement feedback, and legal/regulatory review before external use.</p>
+  </div>
+
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="card" style="border-top: 4px solid var(--primary);">
+      <span class="badge blue" style="margin-bottom:8px;">Tier 1: Core Shield</span>
+      <div style="font-size:24px; font-weight:800; color:var(--ink);">$95,000<span style="font-size:13px; font-weight:500; color:var(--muted);"> / year</span></div>
+      <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:10px;">Challenger Banks &amp; FinTechs</div>
+      <ul style="font-size:12px; line-height:1.7; padding-left:16px; color:var(--ink-light);">
+        <li>Up to 25 Autonomous Agents</li>
+        <li>2.5 Million scans / month</li>
+        <li>Standard BFSI Contract Pack</li>
+        <li>DORA &amp; BNM audit exports</li>
+        <li>Standard 99.9% Cloud SLA</li>
+      </ul>
+    </div>
+
+    <div class="card highlight" style="border-top: 4px solid var(--primary-dark);">
+      <span class="badge green" style="margin-bottom:8px;">Tier 2: Enterprise</span>
+      <div style="font-size:24px; font-weight:800; color:var(--ink);">$280,000<span style="font-size:13px; font-weight:500; color:var(--muted);"> / year</span></div>
+      <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:10px;">Commercial Banks (Tier-1)</div>
+      <ul style="font-size:12px; line-height:1.7; padding-left:16px; color:var(--ink-light);">
+        <li>Up to 100 Autonomous Agents</li>
+        <li>15 Million scans / month</li>
+        <li>Custom Settlement Policies</li>
+        <li>Agentic SOC Digital Twin</li>
+        <li>Multi-Region Cloud Run</li>
+        <li>24/7 Dedicated CISO Support</li>
+      </ul>
+    </div>
+
+    <div class="card" style="border-top: 4px solid var(--accent-gold);">
+      <span class="badge gold" style="margin-bottom:8px;">Tier 3: Sovereign</span>
+      <div style="font-size:24px; font-weight:800; color:var(--ink);">$650,000+<span style="font-size:13px; font-weight:500; color:var(--muted);"> / year</span></div>
+      <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:10px;">Central Banks &amp; Clearing Rails</div>
+      <ul style="font-size:12px; line-height:1.7; padding-left:16px; color:var(--ink-light);">
+        <li>Unlimited Agent Enclaves</li>
+        <li>Unlimited Inbound Throughput</li>
+        <li>On-Prem / Dedicated KMS HSM</li>
+        <li>Post-Quantum (ML-KEM) Suite</li>
+        <li>Full Source Code Escrow</li>
+        <li>Custom Defense Co-Engineering</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Unit Economics &amp; Gross Margin Profile</h2>
+  <div class="grid-4">
+    <div class="stat-block">
+      <div class="stat-val primary">&gt;86%</div>
+      <div class="stat-label">Gross Margin</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-val green">&lt; $12</div>
+      <div class="stat-label">Cost per 1M Scans</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-val primary">140%</div>
+      <div class="stat-label">Net Retention Rate</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-val gold">&lt; 5 mo</div>
+      <div class="stat-label">CAC Payback</div>
+    </div>
+  </div>
+
+  <p>
+    Because AEGIS core detectors run in optimized Python standard library and serverless Google Cloud Run micro-containers, compute costs scale linearly and fractionally. A Tier-2 customer generating $280,000 ARR consumes less than $18,000 in underlying Google Cloud infrastructure, yielding an extraordinary <strong>87.2% software gross margin</strong> to reinvest in engineering and aggressive regional expansion.
+  </p>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 3</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- CHAPTER 2: FIVE-YEAR EXPANSION ROADMAP -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; Global Strategy</span>
+    <span>Chapter 2: Five-Year Roadmap</span>
+  </div>
+
+  <h1>Chapter 2: Five-Year Global Expansion Roadmap</h1>
+
+  <div class="diagram-box">
+    <svg width="680" height="110" viewBox="0 0 680 110" fill="none">
+      <!-- Track -->
+      <line x1="50" y1="55" x2="630" y2="55" stroke="#CBD5E1" stroke-width="4"/>
+      
+      <!-- Phase 1 -->
+      <circle cx="90" cy="55" r="18" fill="#1D4ED8"/>
+      <text x="90" y="60" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="12">Y1</text>
+      <text x="90" y="26" text-anchor="middle" fill="#0F172A" font-weight="bold" font-size="12">Malaysia &amp; SG</text>
+      <text x="90" y="90" text-anchor="middle" fill="#64748B" font-size="10.5">BNM &bull; MAS &bull; $1.2M</text>
+
+      <!-- Phase 2 -->
+      <circle cx="270" cy="55" r="18" fill="#1E3A8A"/>
+      <text x="270" y="60" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="12">Y2</text>
+      <text x="270" y="26" text-anchor="middle" fill="#0F172A" font-weight="bold" font-size="12">ASEAN Expansion</text>
+      <text x="270" y="90" text-anchor="middle" fill="#64748B" font-size="10.5">ID, TH, VN &bull; $5.8M</text>
+
+      <!-- Phase 3 -->
+      <circle cx="450" cy="55" r="18" fill="#F59E0B"/>
+      <text x="450" y="60" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="12">Y3</text>
+      <text x="450" y="26" text-anchor="middle" fill="#0F172A" font-weight="bold" font-size="12">GCC &amp; East Asia</text>
+      <text x="450" y="90" text-anchor="middle" fill="#64748B" font-size="10.5">Riyadh &bull; Tokyo &bull; $14.5M</text>
+
+      <!-- Phase 4 -->
+      <circle cx="610" cy="55" r="18" fill="#059669"/>
+      <text x="610" y="60" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="12">Y4-5</text>
+      <text x="610" y="26" text-anchor="middle" fill="#0F172A" font-weight="bold" font-size="12">Global Domination</text>
+      <text x="610" y="90" text-anchor="middle" fill="#64748B" font-size="10.5">EU &bull; US &bull; $58M+ ARR</text>
+    </svg>
+  </div>
+
+  <h2>Expansion Phases Breakdown</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Phase / Year</th>
+        <th>Geographic Scope</th>
+        <th>Regulatory &amp; Channel Anchor</th>
+        <th>Key Milestones &amp; Targets</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Year 1: Beachhead (2026–2027)</strong></td>
+        <td>Malaysia &amp; Singapore</td>
+        <td>BNM Sandbox &bull; MAS AI Guidelines &bull; Direct Sales</td>
+        <td>5 Bank pilots &bull; 8 Production customers &bull; <strong>$1.2M ARR</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Year 2: ASEAN Regional (2027–2028)</strong></td>
+        <td>Indonesia, Thailand, Philippines, Vietnam</td>
+        <td>Google Cloud Marketplace Launch &bull; ASEAN Banking Council</td>
+        <td>24 Enterprise deployments &bull; 85% renewals &bull; <strong>$5.8M ARR</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Year 3: GCC &amp; East Asia (2028–2029)</strong></td>
+        <td>Riyadh, Dubai, Tokyo, Hong Kong, Sydney</td>
+        <td>SAMA (Saudi) &bull; DIFC &bull; HKMA &bull; AWS &amp; Azure Marketplaces</td>
+        <td>58 Financial institutions &bull; PQC Key deployment &bull; <strong>$14.5M ARR</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Year 4: European Expansion (2029–2030)</strong></td>
+        <td>Frankfurt, London, Paris, Zurich</td>
+        <td>EU DORA Art. 9–10 &bull; EU AI Act Art. 15 &bull; Big-4 Channel</td>
+        <td>110 Enterprise customers &bull; SOC 2 Type III &bull; <strong>$32.0M ARR</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Year 5: North America &amp; Global (2030–2031)</strong></td>
+        <td>New York, Chicago, Toronto &bull; Global Rails</td>
+        <td>US Federal Reserve / OCC &bull; SWIFT Alliance Partner</td>
+        <td>175+ Tier-1 Institutions &bull; Pre-IPO / Strategic Exit &bull; <strong>$58.5M ARR</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>The Middle East &amp; Islamic FinTech Bridge</h2>
+  <p>
+    Operating out of Kuala Lumpur gives ETHRAA MANAGEMENT an unparalleled cultural and regulatory springboard into the Gulf Cooperation Council (GCC). Central banks in Saudi Arabia (SAMA) and the UAE (CBUAE) require sovereign AI data residency and rigorous Islamic banking compliance. AEGIS-BFSI's capability contracts can formally codify Shariah-compliant financing limits and anti-speculation checks into deterministic execution tokens.
+  </p>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 4</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- CHAPTER 3: MARKETPLACE & GO-TO-MARKET STRATEGY -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; Commercial Strategy</span>
+    <span>Chapter 3: GTM &amp; Marketplaces</span>
+  </div>
+
+  <h1>Chapter 3: Hyperscaler Marketplace &amp; Co-Sell Strategy</h1>
+
+  <div class="card highlight">
+    <h3 style="color:var(--primary-dark);">The Hyperscaler Marketplace Advantage (EDP Budget Drawdown)</h3>
+    <p>
+      Enterprise banks maintain massive, multi-million dollar annual Enterprise Discount Program (EDP) commitments with Google Cloud, AWS, and Microsoft Azure. By listing AEGIS-BFSI as a transactable SaaS offering on Google Cloud Marketplace:
+    </p>
+    <ul style="font-size:12px; line-height:1.7; padding-left:16px; margin-top:6px; color:var(--ink-light);">
+      <li><strong>100% Budget Drawdown:</strong> The bank purchases AEGIS using pre-allocated cloud commitments, eliminating the need to secure separate new procurement capital.</li>
+      <li><strong>Procurement Cycle Compressed:</strong> Sales cycles shrink from standard 9–12 months down to 4–6 weeks.</li>
+      <li><strong>Hyperscaler Sales Incentives:</strong> Google Cloud account executives receive up to 100% quota retirement for co-selling AEGIS.</li>
+    </ul>
+  </div>
+
+  <h2>Enterprise Account-Based Marketing (ABM) Funnel</h2>
+  <div class="diagram-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+      <div style="flex:1; background:#EFF6FF; border:1px solid #BFDBFE; padding:10px; border-radius:6px;">
+        <strong style="color:var(--primary);">1. Threat Inbound</strong>
+        <p style="font-size:11px; margin:4px 0 0 0;">FS-ISAC &amp; NIST CVE reports on banking agent injections</p>
+      </div>
+      <div style="font-size:18px; color:var(--muted);">&rarr;</div>
+      <div style="flex:1; background:#FEF3C7; border:1px solid #FDE68A; padding:10px; border-radius:6px;">
+        <strong style="color:#B45309;">2. Vulnerability Scan</strong>
+        <p style="font-size:11px; margin:4px 0 0 0;">Free 72-hour adversarial simulation of bank agent</p>
+      </div>
+      <div style="font-size:18px; color:var(--muted);">&rarr;</div>
+      <div style="flex:1; background:#ECFDF5; border:1px solid #A7F3D0; padding:10px; border-radius:6px;">
+        <strong style="color:var(--accent-green);">3. 30-Day Sandbox</strong>
+        <p style="font-size:11px; margin:4px 0 0 0;">Deploy AEGIS alongside bank digital twin rails</p>
+      </div>
+      <div style="font-size:18px; color:var(--muted);">&rarr;</div>
+      <div style="flex:1; background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:6px;">
+        <strong style="color:var(--ink);">4. Multi-Year ACV</strong>
+        <p style="font-size:11px; margin:4px 0 0 0;">Execute 3-year enterprise contract via Marketplace</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Strategic Alliance Ecosystem</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Partner Category</th>
+        <th>Target Partners</th>
+        <th>Go-To-Market Collaboration Mechanism</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Cloud Hyperscalers</strong></td>
+        <td>Google Cloud, Microsoft Azure, AWS</td>
+        <td>Marketplace private offers, field co-sell quota retirement, joint solution architectures</td>
+      </tr>
+      <tr>
+        <td><strong>Core Banking ISVs</strong></td>
+        <td>Temenos, Finastra, Mambu, Thought Machine</td>
+        <td>Pre-integrated execution enforcement plugin inside the core transaction clearing engine</td>
+      </tr>
+      <tr>
+        <td><strong>Global System Integrators</strong></td>
+        <td>Accenture, Deloitte, PwC, Capgemini</td>
+        <td>Certified AEGIS implementation practice for Tier-1 multi-agent digital transformations</td>
+      </tr>
+      <tr>
+        <td><strong>Banking Security Guilds</strong></td>
+        <td>FS-ISAC, Cyber Defence Alliance, MITRE ATLAS</td>
+        <td>Bi-directional threat telemetry sharing; automated detector rule distribution</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 5</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- CHAPTER 4: HUMAN CAPITAL & ORGANIZATIONAL DESIGN -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; Organizational Scaling</span>
+    <span>Chapter 4: Human Capital</span>
+  </div>
+
+  <h1>Chapter 4: Human Capital &amp; Organizational Architecture</h1>
+
+  <div class="diagram-box">
+    <div style="background:#0F172A; color:#FFFFFF; padding:8px 16px; border-radius:6px; display:inline-block; font-weight:700; margin-bottom:12px;">
+      EXECUTIVE BOARD &bull; ETHRAA MANAGEMENT
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:4px;">
+      <div style="background:#EFF6FF; border:1.5px solid var(--primary); padding:10px; border-radius:8px;">
+        <strong style="color:var(--primary-dark); font-size:13px;">Security &amp; Cryptography</strong>
+        <p style="font-size:11px; margin:4px 0 0 0; color:var(--ink-light);">Adversarial Red-Team &bull; Applied Cryptographers &bull; SWIFT Protocol Engineers</p>
+      </div>
+      <div style="background:#ECFDF5; border:1.5px solid var(--accent-green); padding:10px; border-radius:8px;">
+        <strong style="color:var(--accent-green); font-size:13px;">Platform &amp; Core Engineering</strong>
+        <p style="font-size:11px; margin:4px 0 0 0; color:var(--ink-light);">Cloud Run / Anthos &bull; Low-Latency Python &bull; Banking MQ &amp; Kafka Integration</p>
+      </div>
+      <div style="background:#FEF3C7; border:1.5px solid var(--accent-gold); padding:10px; border-radius:8px;">
+        <strong style="color:#B45309; font-size:13px;">Enterprise Sales &amp; Regulatory</strong>
+        <p style="font-size:11px; margin:4px 0 0 0; color:var(--ink-light);">Marketplace Alliances &bull; CISO Pre-Sales &bull; BNM/MAS Compliance Counsel</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>5-Year Departmental Headcount Ramp</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Functional Department</th>
+        <th>Year 1 (Pilot)</th>
+        <th>Year 2 (ASEAN)</th>
+        <th>Year 3 (Scale)</th>
+        <th>Year 5 (Global)</th>
+        <th>Primary Expertise Profile</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Security Research &amp; Cryptography</strong></td>
+        <td>3 FTEs</td>
+        <td>6 FTEs</td>
+        <td>12 FTEs</td>
+        <td>24 FTEs</td>
+        <td>Ed25519/PQC mathematics, LLM jailbreak red-teaming</td>
+      </tr>
+      <tr>
+        <td><strong>Core Systems &amp; Distributed Cloud</strong></td>
+        <td>4 FTEs</td>
+        <td>9 FTEs</td>
+        <td>18 FTEs</td>
+        <td>38 FTEs</td>
+        <td>Sub-ms serverless runtime, Google Cloud Run, eBPF</td>
+      </tr>
+      <tr>
+        <td><strong>Banking Integration &amp; Solutions</strong></td>
+        <td>2 FTEs</td>
+        <td>5 FTEs</td>
+        <td>12 FTEs</td>
+        <td>26 FTEs</td>
+        <td>ISO 20022, SWIFT Alliance, IBM MQ, Kafka pipelines</td>
+      </tr>
+      <tr>
+        <td><strong>Enterprise Sales &amp; Strategic Alliances</strong></td>
+        <td>2 FTEs</td>
+        <td>6 FTEs</td>
+        <td>14 FTEs</td>
+        <td>30 FTEs</td>
+        <td>Enterprise B2B banking sales, Cloud Marketplace co-sell</td>
+      </tr>
+      <tr>
+        <td><strong>Regulatory, Legal &amp; Compliance</strong></td>
+        <td>1 FTEs</td>
+        <td>3 FTEs</td>
+        <td>6 FTEs</td>
+        <td>12 FTEs</td>
+        <td>Former BNM/MAS/ECB auditors, FinTech licensing</td>
+      </tr>
+      <tr style="background:#EFF6FF; font-weight:bold;">
+        <td><strong>Total Full-Time Employees (FTEs)</strong></td>
+        <td><strong>12</strong></td>
+        <td><strong>29</strong></td>
+        <td><strong>62</strong></td>
+        <td><strong>130</strong></td>
+        <td><strong>Scaled Global Capability</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Key Leadership Role Specifications</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Head of Applied Cryptography</h3>
+      <p style="font-size:12px;">Oversees the offline-verifiable attestation architecture, Merkle chain integrity, and migration to Post-Quantum Cryptography (NIST FIPS 203 ML-KEM). Manages Cloud KMS and Hardware Security Module (HSM) keys.</p>
+    </div>
+    <div class="card">
+      <h3>VP of Enterprise Solutions Architecture</h3>
+      <p style="font-size:12px;">Leads pre-sales customer engagements with bank CISOs. Deploys proof-of-concept sandboxes into bank digital twins and guarantees zero performance degradation across core transaction processing.</p>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 6</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- CHAPTER 5: FINANCIAL PROJECTIONS & CAPITALIZATION -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; Financial Model</span>
+    <span>Chapter 5: Financials &amp; Investors</span>
+  </div>
+
+  <h1>Chapter 5: Financial Projections &amp; Investor Strategy</h1>
+  <div class="card warning" style="margin-bottom:10px;">
+    <p style="font-size:11px; margin:0;"><strong>Forward-Looking Targets:</strong> The projections below are scenario-based planning targets, not validated forecasts. Actual revenue, margins, hiring pace, and valuation outcomes depend on pilot conversion, regulatory timelines, and fundraising conditions. Review with qualified financial and legal advisors before sharing with investors.</p>
+  </div>
+
+  <h2>5-Year P&amp;L Financial Forecast (USD Millions)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Financial Metric</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Annual Recurring Revenue (ARR)</strong></td>
+        <td><strong>$1.20M</strong></td>
+        <td><strong>$5.80M</strong></td>
+        <td><strong>$14.50M</strong></td>
+        <td><strong>$32.00M</strong></td>
+        <td><strong>$58.50M</strong></td>
+      </tr>
+      <tr>
+        <td>Cost of Goods Sold (Compute &amp; Cloud Infra)</td>
+        <td>$0.18M</td>
+        <td>$0.75M</td>
+        <td>$1.88M</td>
+        <td>$4.16M</td>
+        <td>$7.60M</td>
+      </tr>
+      <tr style="background:#ECFDF5;">
+        <td><strong>Gross Profit (85%–87%)</strong></td>
+        <td><strong>$1.02M</strong></td>
+        <td><strong>$5.05M</strong></td>
+        <td><strong>$12.62M</strong></td>
+        <td><strong>$27.84M</strong></td>
+        <td><strong>$50.90M</strong></td>
+      </tr>
+      <tr>
+        <td>R&amp;D / Security Engineering</td>
+        <td>$0.65M</td>
+        <td>$2.40M</td>
+        <td>$5.20M</td>
+        <td>$10.50M</td>
+        <td>$18.00M</td>
+      </tr>
+      <tr>
+        <td>Sales, Marketplace &amp; Marketing</td>
+        <td>$0.30M</td>
+        <td>$1.60M</td>
+        <td>$4.10M</td>
+        <td>$8.80M</td>
+        <td>$15.20M</td>
+      </tr>
+      <tr>
+        <td>General, Legal &amp; Compliance</td>
+        <td>$0.15M</td>
+        <td>$0.55M</td>
+        <td>$1.20M</td>
+        <td>$2.60M</td>
+        <td>$4.50M</td>
+      </tr>
+      <tr style="background:#EFF6FF; font-weight:bold;">
+        <td><strong>EBITDA / Operating Income</strong></td>
+        <td><strong>-$0.08M</strong></td>
+        <td><strong>+$0.50M</strong></td>
+        <td><strong>+$2.12M</strong></td>
+        <td><strong>+$5.94M</strong></td>
+        <td><strong>+$13.20M</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Fundraising &amp; Investor Capitalization Roadmap</h2>
+  <div class="grid-3">
+    <div class="card highlight">
+      <span class="badge blue">Pre-Seed / Angel</span>
+      <h3 style="margin-top:6px;">$1,000,000</h3>
+      <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">Valuation: $7.0M Post</div>
+      <p style="font-size:11.5px;"><strong>Timing:</strong> Q4 2026 (Post-Hackathon)</p>
+      <p style="font-size:11.5px;"><strong>Investors:</strong> MDEC / Cradle Fund (MY), regional angel syndicates, cyber founders.</p>
+      <p style="font-size:11.5px;"><strong>Use of Funds:</strong> 5 production bank pilots, BNM sandbox graduation, Google Cloud partner status.</p>
+    </div>
+
+    <div class="card">
+      <span class="badge green">Seed Round</span>
+      <h3 style="margin-top:6px;">$4,500,000</h3>
+      <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">Valuation: $22.0M Post</div>
+      <p style="font-size:11.5px;"><strong>Timing:</strong> Q4 2027</p>
+      <p style="font-size:11.5px;"><strong>Investors:</strong> Ten Eleven Ventures, Singtel Innov8, SGInnovate, Google for Startups.</p>
+      <p style="font-size:11.5px;"><strong>Use of Funds:</strong> ASEAN regional sales force, Marketplace automation, SOC 2 certification.</p>
+    </div>
+
+    <div class="card">
+      <span class="badge gold">Series A</span>
+      <h3 style="margin-top:6px;">$18,000,000</h3>
+      <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">Valuation: $85.0M Post</div>
+      <p style="font-size:11.5px;"><strong>Timing:</strong> Q2 2029</p>
+      <p style="font-size:11.5px;"><strong>Investors:</strong> Bessemer Venture Partners, Ballistic Ventures, GV (Google Ventures).</p>
+      <p style="font-size:11.5px;"><strong>Use of Funds:</strong> EU DORA compliance rollout, US headquarters in New York, channel expansion.</p>
+    </div>
+  </div>
+
+  <h2>Target Exit Scenarios &amp; Strategic Value Realization</h2>
+  <p>
+    <strong>Strategic M&amp;A:</strong> Acquisition by Cloud Hyperscalers (Google Cloud, Microsoft, AWS) or Enterprise Cybersecurity Giants (Palo Alto Networks, CrowdStrike, Cisco) seeking an execution enforcement layer for enterprise agentic AI. <em>Comparable multiples cited are illustrative ranges observed in enterprise AI-security transactions and do not represent a valuation opinion.</em>
+  </p>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 7</div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- CHAPTER 6: REGULATORY & OPERATIONAL PLAYBOOK -->
+<!-- ========================================================================= -->
+<section class="page">
+  <div class="doc-header">
+    <span>AEGIS-BFSI Blueprint &bull; Operations</span>
+    <span>Chapter 6: Regulatory Playbook</span>
+  </div>
+
+  <h1>Chapter 6: Regulatory Mapping &amp; Proof of Deployment</h1>
+
+  <div class="card success">
+    <h3 style="color:var(--accent-green);">The Compliance Audit Moat</h3>
+    <p>
+      AEGIS-BFSI converts security from a pure cost center into an active regulatory enabler. Every decision produces a tamper-evident audit block with cryptographic Ed25519 attestation, mapped directly to global financial regulatory mandates.
+    </p>
+  </div>
+
+  <h2>Direct Regulatory Mapping Matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Regulatory Code</th>
+        <th>Compliance Requirement</th>
+        <th>AEGIS-BFSI Technical Enforcement</th>
+        <th>Verifiable Audit Evidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>DORA Art. 9–10</strong></td>
+        <td>Anomalous ICT instruction detection against payment messaging rails</td>
+        <td><code>SwiftManipulationDetector</code> + Ingress Semantic Gateway (8 detectors)</td>
+        <td>Sub-2ms verdict timestamped and logged with detector evidence tags</td>
+      </tr>
+      <tr>
+        <td><strong>DORA Art. 17</strong></td>
+        <td>Tamper-proof incident logging and classified threat timelines</td>
+        <td>Merkle hash-chained <code>AuditLog</code> with SHA-256 parent chaining</td>
+        <td>Offline cryptographic verification via <code>audit.verify()</code></td>
+      </tr>
+      <tr>
+        <td><strong>MiFID II</strong></td>
+        <td>7-Year retention of all transaction-related algorithmic instructions</td>
+        <td>Persistent Cloud Firestore evidence sink with immutable schemas</td>
+        <td>Encrypted archive collection <code>aegis_events</code> with TTL policies</td>
+      </tr>
+      <tr>
+        <td><strong>EU AI Act Art. 15</strong></td>
+        <td>Adversarial robustness testing and error resilience in high-risk AI</td>
+        <td>Capability-bounded Reference Monitor + single-use HMAC execution tokens</td>
+        <td>Denial receipts generated when tools violate contract bounds</td>
+      </tr>
+      <tr>
+        <td><strong>BNM RMiT §10.43</strong></td>
+        <td>Maker-checker / dual control over critical automated fund transfers</td>
+        <td>Automatic <code>DEFER_HUMAN</code> verdict on wires exceeding preset thresholds</td>
+        <td>Attestation requires two distinct cryptographic authorization keys</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Live Operational Artifacts &amp; Access Details</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Live Cloud Endpoints</h3>
+      <p style="font-size:12px; font-family:monospace; margin-bottom:4px;"><strong>Frontend:</strong> https://secbiz.web.app</p>
+      <p style="font-size:12px; font-family:monospace; margin-bottom:4px;"><strong>API Origin:</strong> https://aegis-575342873995.us-central1.run.app</p>
+      <p style="font-size:12px; font-family:monospace;"><strong>Evidence Sink:</strong> Google Cloud Firestore (secbiz/nam5)</p>
+    </div>
+    <div class="card">
+      <h3>Organization &amp; Team</h3>
+      <p style="font-size:12px; margin-bottom:4px;"><strong>Company:</strong> ETHRAA MANAGEMENT</p>
+      <p style="font-size:12px; margin-bottom:4px;"><strong>HQ:</strong> Kuala Lumpur, Malaysia</p>
+      <p style="font-size:12px;"><strong>Team:</strong> TAUFEEQ IBRAHIM (Lead), Adham, Bashar</p>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; padding:14px; background:#0F172A; color:#FFFFFF; border-radius:8px; text-align:center;">
+    <div style="font-size:15px; font-weight:700; margin-bottom:4px;">AEGIS-BFSI &bull; Provable Containment for Autonomous Banking</div>
+    <div style="font-size:12px; color:#94A3B8;">&copy; 2026 ETHRAA MANAGEMENT. All rights reserved. Zero external runtime dependencies.</div>
+  </div>
+
+  <div class="doc-footer">
+    <div>ETHRAA MANAGEMENT &bull; Kuala Lumpur, Malaysia</div>
+    <div>Page 8</div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "name": "bfsi",
+  "tagline": "Payments, trading & core-banking deployments",
+  "detectors": ["swift_manipulation"],
+  "contracts": [
+    {
+      "contract_id": "aegis.bfsi.transactions.v1",
+      "permitted_actions": [
+        {"action": "read_balance", "constraints": {}},
+        {"action": "read_statement", "constraints": {}},
+        {"action": "wire_transfer", "constraints": {
+          "max_amount": 50000,
+          "currency": ["USD", "EUR", "GBP"],
+          "requires_human_approval": true
+        }}
+      ],
+      "prohibited_actions": [
+        "execute_swift_message",
+        "modify_beneficiary_account",
+        "export_customer_pii",
+        "bypass_aml_check",
+        "change_clearing_route"
+      ],
+      "audit_requirements": {
+        "log_every_action": true,
+        "retention_days": 2555,
+        "tamper_evidence": "sha256-chain"
+      }
+    }
+  ],
+  "egress_pii": [
+    {"label": "iban", "pattern": "\\b[A-Z]{2}\\d{2}(?:[ ]?[A-Z0-9]){11,30}\\b", "severity": 0.7}
+  ],
+  "compliance_map": [
+    {"framework": "DORA", "reference": "Art. 9-10 (ICT risk, detection)",
+     "requirement": "Detect anomalous instruction patterns against critical ICT systems",
+     "aegis_coverage": "SwiftManipulationDetector + semantic gateway fail-closed verdicts"},
+    {"framework": "DORA", "reference": "Art. 17 (incident reporting)",
+     "requirement": "Classified incident timelines and audit trails",
+     "aegis_coverage": "hash-chained AuditLog (core/audit_log.py)"},
+    {"framework": "MiFID II", "reference": "Record-keeping obligations",
+     "requirement": "7-year retention of transaction-related decisions",
+     "aegis_coverage": "contract audit_requirements.retention_days=2555"},
+    {"framework": "EU AI Act", "reference": "Art. 15 (robustness of high-risk systems)",
+     "requirement": "Credit/fraud AI resilient to adversarial input",
+     "aegis_coverage": "capability-bounded executor + adversarial suite regression gates"}
+  ],
+  "threat_signatures": [
+    "redirect the settlement message to the drop account",
+    "issue mt202 cover payment to attacker controlled bank",
+    "swap beneficiary iban before cut-off",
+    "forge the confirmation of funds message"
+  ],
+  "intel_feeds": ["FS-ISAC", "MITRE ATLAS"],
+  "metadata": {
+    "regulators": ["ECB/DORA", "MiFID II", "EU AI Act"],
+    "latency_budget_ms": 500,
+    "latency_policy": "degrade_to_fast_path",
+    "primary_vector": "agentic API exploitation; SWIFT manipulation",
+    "market_share_pct": 29
+  }
+}

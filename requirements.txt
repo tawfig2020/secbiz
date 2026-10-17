@@ -1,0 +1,10 @@
+# Project Aegis reference implementation is stdlib-only (Python 3.10+).
+# No third-party dependencies are required to run the demo or the tests.
+#
+# Optional integrations (not required):
+#   fastapi>=0.110   # expose the semantic firewall as a gateway service
+#   pydantic>=2.6    # richer schema validation
+#   cryptography>=42 # Ed25519 asymmetric attestation signing (aegis.core)
+#   hypothesis>=6.98 # property-based tests (tests/test_properties.py)
+#
+# Pinned versions live in requirements.lock for reproducible builds/SBOM.

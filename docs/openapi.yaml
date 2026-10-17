@@ -1,0 +1,183 @@
+openapi: 3.0.3
+info:
+  title: Aegis Command Center API
+  version: 1.0.0
+  description: |
+    Reference HTTP contract for `server.py`. The stdlib server implements a
+    subset of this contract; a FastAPI front-end is the intended production
+    upgrade. All mutating endpoints require `Authorization: Bearer <key>` or
+    `X-API-Key: <key>` (see `AEGIS_API_KEYS`).
+servers:
+  - url: http://127.0.0.1:8090
+    description: local dev
+paths:
+  /healthz:
+    get:
+      summary: Liveness probe
+      responses:
+        "200":
+          description: healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ok]
+  /api/status:
+    get:
+      summary: Operational status and signer identity
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: status snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  detectors_count:
+                    type: integer
+                  active_contracts:
+                    type: array
+                    items:
+                      type: string
+                  containment_policy:
+                    type: string
+                    enum: [FAIL-CLOSED]
+                  signer:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      public_key_hex:
+                        type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/scan:
+    post:
+      summary: Scan an inbound payload through the semantic gateway
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [payload]
+              properties:
+                payload:
+                  type: string
+      responses:
+        "200":
+          description: verdict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verdict:
+                    type: string
+                    enum: [ALLOW, SANITIZE, BLOCK]
+                  score:
+                    type: number
+                  latency_ms:
+                    type: number
+                  sanitized:
+                    type: string
+                  detections:
+                    type: array
+                    items:
+                      type: object
+                  attestation:
+                    type: object
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /api/evaluate:
+    post:
+      summary: Mediate an action through the reference monitor
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  default: summarize
+                contract_id:
+                  type: string
+                  default: aegis.health.clinical.v1
+                params:
+                  type: object
+                subject:
+                  type: string
+      responses:
+        "200":
+          description: decision + attestation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  decision:
+                    type: string
+                    enum: [ALLOW, DENY, DEFER_HUMAN]
+                  reason:
+                    type: string
+                  allowed:
+                    type: boolean
+                  attestation:
+                    type: object
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  responses:
+    Unauthorized:
+      description: missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    BadRequest:
+      description: invalid or oversized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    RateLimited:
+      description: per-client rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string

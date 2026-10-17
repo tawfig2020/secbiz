@@ -1,0 +1,59 @@
+[
+  {
+    "vertical": "bfsi",
+    "benign": 3,
+    "attacks": 3,
+    "false_positives": 0,
+    "caught": 3,
+    "detection_rate": 1.0,
+    "fp_rate": 0.0,
+    "contract_decisions": [
+      {
+        "action": "wire_transfer",
+        "decision": "DEFER_HUMAN"
+      },
+      {
+        "action": "execute_swift_message",
+        "decision": "DENY"
+      }
+    ]
+  },
+  {
+    "vertical": "healthcare",
+    "benign": 3,
+    "attacks": 3,
+    "false_positives": 0,
+    "caught": 3,
+    "detection_rate": 1.0,
+    "fp_rate": 0.0,
+    "contract_decisions": [
+      {
+        "action": "update_diagnosis",
+        "decision": "DEFER_HUMAN"
+      },
+      {
+        "action": "export_phi",
+        "decision": "DENY"
+      }
+    ]
+  },
+  {
+    "vertical": "government",
+    "benign": 3,
+    "attacks": 3,
+    "false_positives": 0,
+    "caught": 3,
+    "detection_rate": 1.0,
+    "fp_rate": 0.0,
+    "contract_decisions": [
+      {
+        "action": "read_restricted_record",
+        "decision": "DEFER_HUMAN"
+      },
+      {
+        "action": "export_cui",
+        "decision": "DENY"
+      }
+    ]
+  }
+]

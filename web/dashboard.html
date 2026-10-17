@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aegis — Command Dashboard</title>
+  <meta name="description" content="Aegis admin and end-user dashboard: live containment analytics and industry catalog.">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- ============================ TOP BAR ============================ -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <div>AEGIS-BFSI <small>COMMAND</small></div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="live-pill">
+          <span class="dot"></span>
+          <span id="liveStatus">0 breaches · fail-closed active</span>
+        </div>
+        <div class="role-switch" id="roleSwitch">
+          <button data-role="admin" class="active">Admin</button>
+          <button data-role="user">End User</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================ SIDEBAR ============================ -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Admin nav -->
+      <div id="adminNav">
+        <div class="nav-label">Admin Console</div>
+        <button class="nav-item active" data-view="admin-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Overview
+        </button>
+        <button class="nav-item" data-view="admin-analytics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+          Analytics
+        </button>
+        <button class="nav-item" data-view="admin-threats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          Threat Feed
+          <span class="badge">live</span>
+        </button>
+        <button class="nav-item" data-view="admin-decisions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Decisions
+        </button>
+        <button class="nav-item" data-view="admin-clients">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Clients
+        </button>
+      </div>
+
+      <!-- User nav -->
+      <div id="userNav" style="display:none;">
+        <div class="nav-label">My Workspace</div>
+        <button class="nav-item" data-view="user-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Overview
+        </button>
+        <button class="nav-item" data-view="user-catalog">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7l8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Industry Catalog
+        </button>
+        <button class="nav-item" data-view="user-subscription">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Subscription
+        </button>
+        <button class="nav-item" data-view="user-activity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Activity
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        AEGIS-BFSI · ETHRAA MANAGEMENT<br>Kuala Lumpur, Malaysia
+      </div>
+    </aside>
+
+    <!-- ============================ MAIN ============================ -->
+    <main class="main" id="main">
+
+      <!-- ============ ADMIN: OVERVIEW ============ -->
+      <section class="view active" id="admin-overview">
+        <div class="view-head">
+          <div>
+            <h1>Security Overview</h1>
+            <p>Real-time containment posture across all clients and verticals.</p>
+          </div>
+          <button class="btn btn-blue" onclick="refreshDashboard()">Refresh</button>
+        </div>
+
+        <div class="grid kpi">
+          <div class="card kpi">
+            <div class="card-head">
+              <span class="card-title">Total Scans</span>
+              <span class="kpi-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+            </div>
+            <div class="kpi-value" data-count="1284392">0</div>
+            <span class="kpi-delta up">▲ 12.4% this week</span>
+          </div>
+          <div class="card kpi">
+            <div class="card-head">
+              <span class="card-title">Catch Rate</span>
+              <span class="kpi-icon icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            </div>
+            <div class="kpi-value"><span data-count="99.8" data-decimals="1">0</span>%</div>
+            <span class="kpi-delta up">▲ 0.3% vs baseline</span>
+          </div>
+          <div class="card kpi">
+            <div class="card-head">
+              <span class="card-title">Mean MTTC</span>
+              <span class="kpi-icon icon-yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            </div>
+            <div class="kpi-value"><span data-count="0.7" data-decimals="1">0</span>ms</div>
+            <span class="kpi-delta flat">p99 1.16ms</span>
+          </div>
+          <div class="card kpi">
+            <div class="card-head">
+              <span class="card-title">Attestations Minted</span>
+              <span class="kpi-icon icon-black"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+            </div>
+            <div class="kpi-value" data-count="14247">0</div>
+            <span class="kpi-delta up">▲ signed &amp; verifiable</span>
+          </div>
+        </div>
+
+        <div class="grid split" style="margin-top:20px;">
+          <div class="card">
+            <div class="card-head">
+              <span class="card-title"><strong>Threats Blocked</strong> — last 14 days</span>
+            </div>
+            <div class="chart" id="threatLineChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <span class="card-title"><strong>Verdict Distribution</strong></span>
+            </div>
+            <div class="chart" id="verdictDonut"></div>
+            <div class="legend" id="verdictLegend"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <div class="card-head">
+            <span class="card-title"><strong>Recent Decisions</strong></span>
+            <button class="btn btn-ghost" onclick="navigate('admin-decisions')">View all</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Client</th><th>Industry</th><th>Payload</th><th>Verdict</th><th>Score</th></tr></thead>
+              <tbody id="recentDecisions"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ADMIN: ANALYTICS ============ -->
+      <section class="view" id="admin-analytics">
+        <div class="view-head">
+          <div>
+            <h1>Analytics</h1>
+            <p>Detection, latency, and industry breakdown for decision-making.</p>
+          </div>
+        </div>
+
+        <div class="grid duo">
+          <div class="card">
+            <div class="card-head"><span class="card-title"><strong>Detection by Attack Category</strong></span></div>
+            <div class="chart" id="categoryBarChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title"><strong>Latency Percentiles</strong></span></div>
+            <div id="latencyBars"></div>
+            <div class="divider"></div>
+            <div class="card-title" style="margin-bottom:12px;"><strong>Industry Mix</strong></div>
+            <div id="industryBars"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <div class="card-head"><span class="card-title"><strong>Verdict Outcomes</strong> — by severity</span></div>
+          <div class="grid kpi" style="margin-top:6px;">
+            <div class="card kpi" style="box-shadow:none;border-color:var(--border);">
+              <div class="kpi-value" style="color:var(--allow);" data-count="82" data-suffix="%">0%</div>
+              <span class="card-title">Allowed (benign)</span>
+            </div>
+            <div class="card kpi" style="box-shadow:none;border-color:var(--border);">
+              <div class="kpi-value" style="color:var(--sanitize);" data-count="12" data-suffix="%">0%</div>
+              <span class="card-title">Sanitized</span>
+            </div>
+            <div class="card kpi" style="box-shadow:none;border-color:var(--border);">
+              <div class="kpi-value" style="color:var(--block);" data-count="5" data-suffix="%">0%</div>
+              <span class="card-title">Blocked</span>
+            </div>
+            <div class="card kpi" style="box-shadow:none;border-color:var(--border);">
+              <div class="kpi-value" style="color:var(--defer);" data-count="1" data-suffix="%">0%</div>
+              <span class="card-title">Deferred (human)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ADMIN: THREATS ============ -->
+      <section class="view" id="admin-threats">
+        <div class="view-head">
+          <div>
+            <h1>Threat Feed</h1>
+            <p>Live signature ingestion from FS-ISAC, H-ISAC, and CISA.</p>
+          </div>
+          <button class="btn btn-yellow" onclick="refreshDashboard()">Poll feeds</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Source</th><th>Signature</th><th>Category</th><th>Weight</th><th>Status</th></tr></thead>
+              <tbody id="threatFeed"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ADMIN: DECISIONS ============ -->
+      <section class="view" id="admin-decisions">
+        <div class="view-head">
+          <div>
+            <h1>Decisions</h1>
+            <p>Every verdict, with signed attestation and latency.</p>
+          </div>
+          <div class="role-switch" id="decisionFilter">
+            <button data-f="all" class="active">All</button>
+            <button data-f="ALLOW">Allow</button>
+            <button data-f="SANITIZE">Sanitize</button>
+            <button data-f="BLOCK">Block</button>
+            <button data-f="DEFER_HUMAN">Defer</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Client</th><th>Industry</th><th>Payload</th><th>Verdict</th><th>Score</th><th>Latency</th></tr></thead>
+              <tbody id="allDecisions"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ADMIN: CLIENTS ============ -->
+      <section class="view" id="admin-clients">
+        <div class="view-head">
+          <div>
+            <h1>Clients</h1>
+            <p>Tenants, tiers, and usage across B2C and B2B.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Client</th><th>Industry</th><th>Tier</th><th>Scans (30d)</th><th>Blocked</th><th>Status</th></tr></thead>
+              <tbody id="clientsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ USER: OVERVIEW ============ -->
+      <section class="view" id="user-overview">
+        <div class="view-head">
+          <div>
+            <h1>Welcome back, Acme Corp</h1>
+            <p>Your protection posture is healthy.</p>
+          </div>
+        </div>
+
+        <div class="grid kpi">
+          <div class="card kpi">
+            <div class="card-head"><span class="card-title">Scans (30d)</span><span class="kpi-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span></div>
+            <div class="kpi-value" data-count="48210">0</div>
+            <span class="kpi-delta up">▲ 8.1%</span>
+          </div>
+          <div class="card kpi">
+            <div class="card-head"><span class="card-title">Threats Blocked</span><span class="kpi-icon icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span></div>
+            <div class="kpi-value" data-count="1478">0</div>
+            <span class="kpi-delta up">▲ 96.9% caught</span>
+          </div>
+          <div class="card kpi">
+            <div class="card-head"><span class="card-title">Protection Score</span><span class="kpi-icon icon-yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 5 6 .9-4 4.6 1 6-6-3.2L6 18.5l1-6L3 7.9 9 7z"/></svg></span></div>
+            <div class="kpi-value"><span data-count="98" data-suffix="/100">0</span></div>
+            <span class="kpi-delta up">Excellent</span>
+          </div>
+          <div class="card kpi">
+            <div class="card-head"><span class="card-title">Active Agents</span><span class="kpi-icon icon-black"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span></div>
+            <div class="kpi-value" data-count="12">0</div>
+            <span class="kpi-delta flat">of 20 budget</span>
+          </div>
+        </div>
+
+        <div class="grid split" style="margin-top:20px;">
+          <div class="card">
+            <div class="card-head"><span class="card-title"><strong>Usage</strong> — this billing cycle</span></div>
+            <div class="stat-line"><span class="k">Plan</span><span class="v">Business · BFSI + Healthcare</span></div>
+            <div class="stat-line"><span class="k">Scans used</span><span class="v">48,210 / 100,000</span></div>
+            <div class="usage-meter"><div class="fill" style="width:48%;"></div></div>
+            <div class="stat-line"><span class="k">API keys</span><span class="v mono">ak_live_••••••••</span></div>
+            <div class="stat-line"><span class="k">Renews</span><span class="v">Nov 1, 2026</span></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title"><strong>Protection by Vector</strong></span></div>
+            <div id="userVectorBars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ USER: CATALOG ============ -->
+      <section class="view" id="user-catalog">
+        <div class="view-head">
+          <div>
+            <h1>Industry Catalog</h1>
+            <p>Choose a vertical to activate its detectors, contracts, and compliance controls.</p>
+          </div>
+        </div>
+        <div class="catalog-grid" id="catalogGrid"></div>
+      </section>
+
+      <!-- ============ USER: SUBSCRIPTION ============ -->
+      <section class="view" id="user-subscription">
+        <div class="view-head">
+          <div>
+            <h1>Subscription</h1>
+            <p>Manage your plan, verticals, and billing.</p>
+          </div>
+        </div>
+        <div class="grid duo">
+          <div class="card">
+            <div class="card-head"><span class="card-title"><strong>Current Plan</strong></span></div>
+            <div class="kpi-value" style="font-size:28px;">Business</div>
+            <p style="color:var(--ink-soft);margin:6px 0 16px;">$499 / month · 100k scans · 20 agents</p>
+            <div class="stat-line"><span class="k">Verticals</span><span class="v">BFSI, Healthcare</span></div>
+            <div class="stat-line"><span class="k">Compliance</span><span class="v">SOC 2, HIPAA, DORA</span></div>
+            <div class="stat-line"><span class="k">Support</span><span class="v">Priority · 4h SLA</span></div>
+            <div style="margin-top:18px;display:flex;gap:10px;">
+              <button class="btn btn-primary">Upgrade</button>
+              <button class="btn btn-ghost">Cancel</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title"><strong>Billing</strong></span></div>
+            <div class="stat-line"><span class="k">Next invoice</span><span class="v">$499.00</span></div>
+            <div class="stat-line"><span class="k">Payment method</span><span class="v">Visa •••• 4242</span></div>
+            <div class="stat-line"><span class="k">Billing email</span><span class="v">billing@acme.com</span></div>
+            <div class="stat-line"><span class="k">Status</span><span class="v" style="color:var(--allow);">Active</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ USER: ACTIVITY ============ -->
+      <section class="view" id="user-activity">
+        <div class="view-head">
+          <div>
+            <h1>Activity</h1>
+            <p>Your recent scans and containment events.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Agent</th><th>Payload</th><th>Verdict</th><th>Latency</th></tr></thead>
+              <tbody id="userActivity"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
